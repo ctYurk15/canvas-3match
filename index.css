@@ -1,0 +1,17 @@
+@font-face {
+    font-family: 'alagard';
+    src: url('alagard.ttf');
+}
+
+body 
+{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'alagard';
+}
+
+.hidden
+{
+    display: none !important;
+}
