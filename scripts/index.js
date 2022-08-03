@@ -33,6 +33,23 @@ canvas.height = window.innerHeight;
 const engine = new Engine(canvas, 'aqua');
 const progress_tracker = new Progress();
 
+//detect click on square
+window.addEventListener('click', function(event){
+    
+    for(let y = 0; y < matrix_size.y; y++)
+    {
+        for(let x = 0; x < matrix_size.x; x++)
+        {
+            const square = matrix[y][x];
+            if(square.pointInRectangle(event.x, event.y))
+            {
+                square.color = 'black';
+            }
+        }
+    }
+
+});
+
 start(engine);
 
 //game loop

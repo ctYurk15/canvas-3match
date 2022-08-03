@@ -23,4 +23,16 @@ class Rectangle extends GameObject
 
         return false;
     }
+
+    pointInRectangle(point_x, point_y)
+    {
+        console.log(this.x <= point_x, this.x + this.width >= point_x, this.y <= point_y, this.y + this.height >= point_y)
+        if(this.x <= point_x 
+            && this.x + this.width >= point_x 
+            && this.y <= point_y
+            && this.y + this.height >= point_y
+            ) return true;
+
+        return false;
+    }
 }
