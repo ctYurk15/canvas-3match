@@ -102,12 +102,28 @@ class Engine
         return game_object.id;
     }
 
-    deleteObject(object_index)
+    deleteObject(object_id)
     {
         this.game_objects = this.game_objects.filter(function(game_object){
-            if(game_object.id == object_index) game_object.onDelete('singleDelete');
-            return game_object.id != object_index
+            if(game_object.id == object_id) game_object.onDelete('singleDelete');
+            return game_object.id != object_id
         });
+    }
+
+    getObjectById(object_id)
+    {
+        let result = null;
+
+        for(let object of this.game_objects)
+        {
+            if(object.id == object_id)
+            {
+                result = object;
+                break;
+            }
+        }
+
+        return result;
     }
 
     clearObjects()

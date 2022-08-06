@@ -1,5 +1,6 @@
 //in-game state
 let matrix = [];
+let current_square_id = null;
 
 function start(engine)
 {
@@ -43,7 +44,14 @@ window.addEventListener('click', function(event){
             const square = matrix[y][x];
             if(square.pointInRectangle(event.x, event.y))
             {
-                square.color = 'black';
+                if(current_square_id != null)
+                {
+                    let previous_square = engine.getObjectById(current_square_id);
+                    if(previous_square != null) previous_square.unselect();
+                }
+
+                current_square_id = square.id;
+                square.select();
             }
         }
     }
