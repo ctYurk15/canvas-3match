@@ -1,28 +1,11 @@
 //in-game state
-let matrix = [];
+//let matrix = [];
 let current_square_id = null;
+let current_square_point = null;
 
-function start(engine)
+function start(engine, matrix)
 {
-    //clear old state
-    matrix = getEmpty2dArray(matrix_size.x, matrix_size.y);
-
-    //generating matrix
-    for(let y = 0; y < matrix_size.y; y++)
-    {
-        for(let x = 0; x < matrix_size.x; x++)
-        {
-            const square_x = matrix_coordinates.x + (x * square_width);
-            const square_y = matrix_coordinates.y + (y * square_width);
-            const square_color = square_colors[getRandomInt(0, square_colors.length)];
-
-            const square = new Square(square_x, square_y, square_width, square_color);
-            matrix[y][x] = square;
-            engine.addObject(square);
-
-        }
-    }
-
+    matrix.regenerateArray(square_width, square_colors, engine);
     engine.start();
 }
 
@@ -33,32 +16,56 @@ canvas.height = window.innerHeight;
 
 const engine = new Engine(canvas, 'aqua');
 const progress_tracker = new Progress();
+const matrix = new Matrix(matrix_coordinates.x, matrix_coordinates.y, matrix_size.x, matrix_size.x);
 
 //detect click on square
 window.addEventListener('click', function(event){
     
-    for(let y = 0; y < matrix_size.y; y++)
-    {
-        for(let x = 0; x < matrix_size.x; x++)
-        {
-            const square = matrix[y][x];
-            if(square.pointInRectangle(event.x, event.y))
-            {
-                if(current_square_id != null)
-                {
-                    let previous_square = engine.getObjectById(current_square_id);
-                    if(previous_square != null) previous_square.unselect();
-                }
+    matrix.checkSquares(function(square, square_point){
 
+        let swaped = false;
+        if(square.pointInRectangle(event.x, event.y))
+        {
+            if(current_square_id != null)
+            {
+                let previous_square = engine.getObjectById(current_square_id);
+                if(previous_square != null) 
+                {
+                    previous_square.unselect();
+
+                    //we can only swap squares, which collide with each other
+                    let current_square_position = square.centerCoordinates();
+                    let previous_square_position = previous_square.centerCoordinates();
+                    
+                    console.log(current_square_position.distanceFrom(previous_square_position));
+                    if(current_square_position.distanceFrom(previous_square_position) <= square_width)
+                    {
+                        matrix.swapSquares(square_point, current_square_point);
+                        engine.clearObjectsByTag('square');
+                        matrix.refillGameObjects(engine);
+                        swaped = true;
+                    }
+                }
+            }
+
+            if(!swaped)
+            {
                 current_square_id = square.id;
+                current_square_point = square_point;
                 square.select();
             }
+            else 
+            {
+                current_square_id = null;
+                current_square_point = null;
+                console.log(9);
+            }
         }
-    }
+    });
 
 });
 
-start(engine);
+start(engine, matrix);
 
 //game loop
 let animation_frame;

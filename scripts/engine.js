@@ -106,7 +106,7 @@ class Engine
     {
         this.game_objects = this.game_objects.filter(function(game_object){
             if(game_object.id == object_id) game_object.onDelete('singleDelete');
-            return game_object.id != object_id
+            return game_object.id != object_id;
         });
     }
 
@@ -134,6 +134,14 @@ class Engine
 
         this.game_objects = [];
         this.clear();
+    }
+
+    clearObjectsByTag(tag)
+    {
+        this.game_objects = this.game_objects.filter(function(game_object){
+            if(game_object.tag == tag) game_object.onDelete('singleDelete');
+            return game_object.tag != tag;
+        });
     }
 
     checkButtonsPress()

@@ -1,6 +1,7 @@
 class Square extends Rectangle
 {
     selected = false;
+    tag = 'square';
 
     constructor(x, y, width, color)
     {

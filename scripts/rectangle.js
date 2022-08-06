@@ -34,4 +34,15 @@ class Rectangle extends GameObject
 
         return false;
     }
+
+    centerCoordinates()
+    {
+        let x = 0;
+        let y = 0;
+
+        x = this.x + this.width / 2;
+        y = this.y + this.height / 2;
+
+        return new Point(x, y);
+    }
 }

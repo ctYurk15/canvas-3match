@@ -1,13 +1,13 @@
-class GameObject
+class GameObject extends Point
 {
     id = 0;
     paralax_force = 0;
     paralax_scroll = 0;
+    tag = '';
 
     constructor(x, y)
     {
-        this.x = x;
-        this.y = y;
+        super(x, y);
     }
 
     draw(canvas_context)
