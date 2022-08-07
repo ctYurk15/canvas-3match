@@ -1,4 +1,4 @@
-class Matrix extends Point
+class Matrix extends GameObject
 {
     array = [];
 
@@ -26,7 +26,6 @@ class Matrix extends Point
 
                 const square = new Square(square_x, square_y, square_width, square_color);
                 this.array[y][x] = square;
-                engine.addObject(square);
             }
         }
     }
@@ -42,17 +41,39 @@ class Matrix extends Point
         }
     }
 
-    swapSquares(point1, point2)
+    checkCombinations(point1, point2)
     {
-        let tmp = this.array[point1.y][point1.x].color;
-        this.array[point1.y][point1.x].color = this.array[point2.y][point2.x].color;
-        this.array[point2.y][point2.x].color = tmp;
+
     }
 
-    refillGameObjects(engine)
+    getSquare(point)
     {
-        this.checkSquares(function(square, square_point){
-            engine.addObject(square);
-        });
+        if(point.x < this.width && point.y < this.height)
+        {
+            if(this.array[point.y][point.x] != null) return this.array[point.y][point.x];
+        }
+
+        return null;
+    }
+
+    swapSquares(point1, point2)
+    {
+        const square1 = this.array[point1.y][point1.x];
+        const square2 = this.array[point2.y][point2.x];
+        const c1 = square1.color;  const c2 = square2.color;
+
+        this.array[point1.y][point1.x] = new Square(square2.x, square2.y, square2.width, square1.color);
+        this.array[point2.y][point2.x] = new Square(square1.x, square1.y, square1.width, square2.color);
+    }
+
+    render(canvas_context)
+    {
+        for(let y = 0; y < this.height; y++)
+        {
+            for(let x = 0; x < this.width; x++)
+            {
+                this.array[y][x].render(canvas_context);
+            }
+        }
     }
 }
