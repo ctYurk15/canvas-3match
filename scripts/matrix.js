@@ -1,14 +1,16 @@
 class Matrix extends GameObject
 {
     array = [];
+    can_swap = true;
 
-    constructor(x, y, matrix_width, matrix_height, minimum_squares_combination)
+    constructor(x, y, matrix_width, matrix_height, minimum_squares_combination, swap_back_time)
     {
         super(x, y);
 
         this.width = matrix_width;
         this.height = matrix_height;
         this.minimum_squares_combination = minimum_squares_combination;
+        this.swap_back_time = swap_back_time;
     }
 
     regenerateArray(square_width, square_colors, engine)
@@ -44,12 +46,28 @@ class Matrix extends GameObject
 
     checkCombinations(point1, point2)
     {
-        this.checkCombinationsInPoint(point1);
-        this.checkCombinationsInPoint(point2);
+        let point1_result = this.checkCombinationsInPoint(point1);
+        let point2_result = this.checkCombinationsInPoint(point2);
+
+        //if nothing`s changed, swap back
+        if(point1_result.length == 0 && point2_result.length == 0)
+        {
+            this.can_swap = false;
+
+            const matrix = this;
+            const timeout = setTimeout(function(){
+
+                matrix.swapSquares(point1, point2);
+                matrix.can_swap = true;
+
+            }, matrix.swap_back_time)
+        }
     }
 
     checkCombinationsInPoint(point)
     {
+        let point_square = this.array[point.y][point.x];
+
         //check x-axis
         let x_combinations = [];
         for(let x = 0; x < this.width; x++)
@@ -59,12 +77,32 @@ class Matrix extends GameObject
 
             if(current_cell != undefined && current_cell.color == current_square.color)
             {
-                current_cell.count++;
+                current_cell.points.push(new Point(current_square.x, current_square.y));
             }
-            else x_combinations.push({color: current_square.color, count: 1})
+            else x_combinations.push({color: current_square.color, points: [new Point(current_square.x, current_square.y)]})
         }
 
-        console.log(x_combinations);
+        //check y-axis
+        let y_combinations = [];
+        for(let y = 0; y < this.height; y++)
+        {
+            const current_square = this.array[y][point.x];
+            let current_cell = y_combinations[y_combinations.length-1];
+
+            if(current_cell != undefined && current_cell.color == current_square.color)
+            {
+                current_cell.points.push(new Point(current_square.x, current_square.y));
+            }
+            else y_combinations.push({color: current_square.color, points: [new Point(current_square.x, current_square.y)]})
+        }
+
+        //merge arrays
+        const matrix = this;
+        let combinations = x_combinations.concat(y_combinations).filter(function(cell){
+            return cell.points.length >= matrix.minimum_squares_combination && point_square.inPointsArray(cell.points);
+        });
+
+        return combinations;
     }
 
     getSquare(point)
@@ -92,7 +130,10 @@ class Matrix extends GameObject
         {
             for(let x = 0; x < this.width; x++)
             {
-                this.array[y][x].render(canvas_context);
+                if(this.array[y][x] != null)
+                {
+                    this.array[y][x].render(canvas_context);
+                }
             }
         }
     }
