@@ -2,12 +2,13 @@ class Matrix extends GameObject
 {
     array = [];
 
-    constructor(x, y, matrix_width, matrix_height)
+    constructor(x, y, matrix_width, matrix_height, minimum_squares_combination)
     {
         super(x, y);
 
         this.width = matrix_width;
         this.height = matrix_height;
+        this.minimum_squares_combination = minimum_squares_combination;
     }
 
     regenerateArray(square_width, square_colors, engine)
@@ -43,7 +44,27 @@ class Matrix extends GameObject
 
     checkCombinations(point1, point2)
     {
+        this.checkCombinationsInPoint(point1);
+        this.checkCombinationsInPoint(point2);
+    }
 
+    checkCombinationsInPoint(point)
+    {
+        //check x-axis
+        let x_combinations = [];
+        for(let x = 0; x < this.width; x++)
+        {
+            const current_square = this.array[point.y][x];
+            let current_cell = x_combinations[x_combinations.length-1];
+
+            if(current_cell != undefined && current_cell.color == current_square.color)
+            {
+                current_cell.count++;
+            }
+            else x_combinations.push({color: current_square.color, count: 1})
+        }
+
+        console.log(x_combinations);
     }
 
     getSquare(point)
@@ -58,12 +79,11 @@ class Matrix extends GameObject
 
     swapSquares(point1, point2)
     {
-        const square1 = this.array[point1.y][point1.x];
-        const square2 = this.array[point2.y][point2.x];
-        const c1 = square1.color;  const c2 = square2.color;
-
-        this.array[point1.y][point1.x] = new Square(square2.x, square2.y, square2.width, square1.color);
-        this.array[point2.y][point2.x] = new Square(square1.x, square1.y, square1.width, square2.color);
+        const square1 = structuredClone(this.array[point1.y][point1.x]);
+        const square2 =  structuredClone(this.array[point2.y][point2.x]);
+        
+        this.array[point1.y][point1.x].color = square2.color;
+        this.array[point2.y][point2.x].color = square1.color;
     }
 
     render(canvas_context)

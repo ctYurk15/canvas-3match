@@ -16,7 +16,7 @@ canvas.height = window.innerHeight;
 
 const engine = new Engine(canvas, 'aqua');
 const progress_tracker = new Progress();
-const matrix = new Matrix(matrix_coordinates.x, matrix_coordinates.y, matrix_size.x, matrix_size.x);
+const matrix = new Matrix(matrix_coordinates.x, matrix_coordinates.y, matrix_size.x, matrix_size.x, minimum_squares_combination);
 engine.addObject(matrix);
 
 //detect click on square
@@ -38,7 +38,6 @@ window.addEventListener('click', function(event){
                     let current_square_position = square.centerCoordinates();
                     let previous_square_position = previous_square.centerCoordinates();
                     
-                    console.log(current_square_position.distanceFrom(previous_square_position));
                     if(current_square_position.distanceFrom(previous_square_position) <= square_width)
                     {
                         matrix.swapSquares(square_point, current_square_point);
@@ -58,7 +57,7 @@ window.addEventListener('click', function(event){
             {
                 current_square_id = null;
                 current_square_point = null;
-                console.log(9);
+                square.unselect();
             }
         }
     });
