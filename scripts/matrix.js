@@ -13,7 +13,16 @@ class Matrix extends GameObject
         this.swap_back_time = swap_back_time;
     }
 
-    regenerateArray(square_width, square_colors, engine)
+    generateRandomSquare(x, y, square_width, square_colors)
+    {
+        const square_x = this.x + (x * square_width);
+        const square_y = this.y + (y * square_width);
+        const square_color = square_colors[getRandomInt(0, square_colors.length)];
+
+        return new Square(square_x, square_y, square_width, square_color);
+    }
+
+    regenerateArray(square_width, square_colors)
     {
         //clear old state
         this.array = getEmpty2dArray(this.width, this.height);
@@ -23,11 +32,7 @@ class Matrix extends GameObject
         {
             for(let x = 0; x < this.width; x++)
             {
-                const square_x = this.x + (x * square_width);
-                const square_y = this.y + (y * square_width);
-                const square_color = square_colors[getRandomInt(0, square_colors.length)];
-
-                const square = new Square(square_x, square_y, square_width, square_color);
+                const square = this.generateRandomSquare(x, y, square_width, square_colors);
                 this.array[y][x] = square;
             }
         }
@@ -59,15 +64,41 @@ class Matrix extends GameObject
 
                 matrix.swapSquares(point1, point2);
                 matrix.can_swap = true;
+                clearTimeout(timeout);
 
             }, matrix.swap_back_time)
         }
+        else
+        {
+            let squares_count = 0;
+            let unique_points = [];
+
+            const matrix = this;
+            point1_result.concat(point2_result).forEach(function(combination) {
+                
+                //instead of adding length, add square to count only if it's no destroyed already
+                combination.points.forEach(function(point){
+                    if(matrix.array[point.y][point.x] != null)
+                    {
+                        squares_count++;
+                        unique_points.push(point);
+                        matrix.array[point.y][point.x] = null;
+                    }
+                });
+
+            });
+
+            console.log(squares_count, unique_points);
+        }
+    }
+
+    fillDestroyedSquares(points)
+    {
+
     }
 
     checkCombinationsInPoint(point)
     {
-        let point_square = this.array[point.y][point.x];
-
         //check x-axis
         let x_combinations = [];
         for(let x = 0; x < this.width; x++)
@@ -77,9 +108,9 @@ class Matrix extends GameObject
 
             if(current_cell != undefined && current_cell.color == current_square.color)
             {
-                current_cell.points.push(new Point(current_square.x, current_square.y));
+                current_cell.points.push(new Point(x, point.y));
             }
-            else x_combinations.push({color: current_square.color, points: [new Point(current_square.x, current_square.y)]})
+            else x_combinations.push({color: current_square.color, points: [new Point(x, point.y)]})
         }
 
         //check y-axis
@@ -91,15 +122,15 @@ class Matrix extends GameObject
 
             if(current_cell != undefined && current_cell.color == current_square.color)
             {
-                current_cell.points.push(new Point(current_square.x, current_square.y));
+                current_cell.points.push(new Point(point.x, y));
             }
-            else y_combinations.push({color: current_square.color, points: [new Point(current_square.x, current_square.y)]})
+            else y_combinations.push({color: current_square.color, points: [new Point(point.x, y)]})
         }
 
         //merge arrays
         const matrix = this;
         let combinations = x_combinations.concat(y_combinations).filter(function(cell){
-            return cell.points.length >= matrix.minimum_squares_combination && point_square.inPointsArray(cell.points);
+            return cell.points.length >= matrix.minimum_squares_combination && point.inPointsArray(cell.points);
         });
 
         return combinations;

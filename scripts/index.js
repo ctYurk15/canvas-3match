@@ -5,7 +5,7 @@ let current_square_point = null;
 
 function start(engine, matrix)
 {
-    matrix.regenerateArray(square_width, square_colors, engine);
+    matrix.regenerateArray(square_width, square_colors);
     engine.start();
 }
 
