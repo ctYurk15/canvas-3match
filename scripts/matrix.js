@@ -3,10 +3,11 @@ class Matrix extends GameObject
     array = [];
     can_swap = true;
 
-    constructor(x, y, matrix_width, matrix_height, minimum_squares_combination, swap_back_time)
+    constructor(x, y, matrix_width, matrix_height, minimum_squares_combination, swap_back_time, square_width)
     {
         super(x, y);
 
+        this.square_width = square_width;
         this.width = matrix_width;
         this.height = matrix_height;
         this.minimum_squares_combination = minimum_squares_combination;
@@ -54,12 +55,12 @@ class Matrix extends GameObject
         let point1_result = this.checkCombinationsInPoint(point1);
         let point2_result = this.checkCombinationsInPoint(point2);
 
+        const matrix = this;
+
         //if nothing`s changed, swap back
         if(point1_result.length == 0 && point2_result.length == 0)
         {
             this.can_swap = false;
-
-            const matrix = this;
             const timeout = setTimeout(function(){
 
                 matrix.swapSquares(point1, point2);
@@ -73,7 +74,6 @@ class Matrix extends GameObject
             let squares_count = 0;
             let unique_points = [];
 
-            const matrix = this;
             point1_result.concat(point2_result).forEach(function(combination) {
                 
                 //instead of adding length, add square to count only if it's no destroyed already
@@ -88,13 +88,65 @@ class Matrix extends GameObject
 
             });
 
-            console.log(squares_count, unique_points);
+            if(unique_points != [])
+            {
+
+                unique_points = unique_points.sort(function(point1, point2){
+                    return point2.y - point1.y;
+                });
+                console.log(unique_points)
+
+                this.fillDestroyedSquares(unique_points);
+                this.can_swap = false;
+    
+                const timeout = setTimeout(function(){
+    
+                    matrix.can_swap = true;
+                    clearTimeout(timeout);
+    
+                }, matrix.swap_back_time);
+
+            }
         }
     }
 
     fillDestroyedSquares(points)
     {
+        const matrix = this;
 
+        points.forEach(function(point){
+
+            //if(matrix.array[point.y][point.x] == null && matrix.array[point.y][point.x] == undefined)
+            //{
+                //moving each square one point down
+                for(let global_y = point.y+1; global_y >= 0; global_y--)
+                {
+                    //matrix.array[global_y][point.x] = matrix.generateRandomSquare(point.x, global_y, 50, ['red']);
+                    for(let local_y = global_y; local_y >= 0; local_y--)
+                    {
+                        
+
+                        if(matrix.array[local_y-1] != null)
+                        {
+                            if(matrix.array[local_y] != null && matrix.array[local_y][point.x] != null) 
+                            {
+                                break;
+                            }
+
+                            const upper_square = matrix.array[local_y-1][point.x];
+
+                            if(upper_square != null && upper_square != undefined)
+                            {
+                                matrix.array[local_y][point.x] = matrix.generateRandomSquare(point.x, local_y, upper_square.width, [upper_square.color]);
+                                matrix.array[local_y-1][point.x] = null;
+                            }
+                        }
+                    }
+                }
+            //}
+            //else console.log(point);
+
+        });
     }
 
     checkCombinationsInPoint(point)

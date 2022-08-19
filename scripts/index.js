@@ -16,7 +16,7 @@ canvas.height = window.innerHeight;
 
 const engine = new Engine(canvas, 'aqua');
 const progress_tracker = new Progress();
-const matrix = new Matrix(matrix_coordinates.x, matrix_coordinates.y, matrix_size.x, matrix_size.x, minimum_squares_combination, swap_back_time);
+const matrix = new Matrix(matrix_coordinates.x, matrix_coordinates.y, matrix_size.x, matrix_size.x, minimum_squares_combination, swap_back_time, square_width);
 engine.addObject(matrix);
 
 //detect click on square
