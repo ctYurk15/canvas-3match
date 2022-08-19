@@ -36,17 +36,25 @@ window.addEventListener('click', function(event){
                         let previous_square = matrix.getSquare(current_square_point);
                         if(previous_square != null) 
                         {
-                            previous_square.unselect();
-        
-                            //we can only swap squares, which collide with each other
-                            let current_square_position = square.centerCoordinates();
-                            let previous_square_position = previous_square.centerCoordinates();
-                            
-                            if(current_square_position.distanceFrom(previous_square_position) <= square_width)
+                            if(square.color != previous_square.color)
                             {
-                                matrix.swapSquares(square_point, current_square_point);
-                                matrix.checkCombinations(square_point, current_square_point);
-                                swaped = true;
+                                previous_square.unselect();
+        
+                                //we can only swap squares, which collide with each other
+                                let current_square_position = square.centerCoordinates();
+                                let previous_square_position = previous_square.centerCoordinates();
+                                
+                                if(current_square_position.distanceFrom(previous_square_position) <= square_width)
+                                {
+                                    matrix.swapSquares(square_point, current_square_point);
+                                    matrix.checkCombinations(square_point, current_square_point);
+                                    swaped = true;
+                                }
+                            }
+                            else
+                            {
+                                previous_square.unselect();
+                                square.unselect();
                             }
                         }
                     }

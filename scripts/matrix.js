@@ -153,7 +153,12 @@ class Matrix extends GameObject
                         //create new squares
                         if(matrix.array[global_y][point.x] == null)
                         {
-                            matrix.array[global_y][point.x] = matrix.generateRandomSquare(point.x, global_y, matrix.square_width, matrix.square_colors);
+                            const new_square = matrix.generateRandomSquare(point.x, global_y-1, matrix.square_width, matrix.square_colors);
+                            matrix.array[global_y][point.x] = new_square;
+
+                            //animating
+                            const new_squre_destination = matrix.y + (global_y * matrix.square_width);
+                            gsap.to(new_square, {y: new_squre_destination, duration: swap_back_time/1000});
                         }
                     }
 
@@ -214,7 +219,7 @@ class Matrix extends GameObject
 
     swapSquares(point1, point2)
     {
-        //because of gsap, we can not generate strcutured clone
+        //because of gsap, we can not generate structured clone
         this.array[point1.y][point1.x]._gsap = null;
         this.array[point2.y][point2.x]._gsap = null;
 
