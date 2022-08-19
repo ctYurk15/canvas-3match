@@ -3,7 +3,7 @@ class Matrix extends GameObject
     array = [];
     can_swap = true;
 
-    constructor(x, y, matrix_width, matrix_height, minimum_squares_combination, swap_back_time, square_width)
+    constructor(x, y, matrix_width, matrix_height, minimum_squares_combination, swap_back_time, square_width, square_colors)
     {
         super(x, y);
 
@@ -12,6 +12,7 @@ class Matrix extends GameObject
         this.height = matrix_height;
         this.minimum_squares_combination = minimum_squares_combination;
         this.swap_back_time = swap_back_time;
+        this.square_colors = square_colors;
     }
 
     generateRandomSquare(x, y, square_width, square_colors)
@@ -116,22 +117,17 @@ class Matrix extends GameObject
 
         points.forEach(function(point){
 
-            //if(matrix.array[point.y][point.x] == null && matrix.array[point.y][point.x] == undefined)
-            //{
+            if(matrix.array[point.y][point.x] == null && matrix.array[point.y][point.x] == undefined)
+            {
                 //moving each square one point down
                 for(let global_y = point.y+1; global_y >= 0; global_y--)
                 {
-                    //matrix.array[global_y][point.x] = matrix.generateRandomSquare(point.x, global_y, 50, ['red']);
+                    //blocks fall down
                     for(let local_y = global_y; local_y >= 0; local_y--)
                     {
-                        
-
                         if(matrix.array[local_y-1] != null)
                         {
-                            if(matrix.array[local_y] != null && matrix.array[local_y][point.x] != null) 
-                            {
-                                break;
-                            }
+                            if(matrix.array[local_y] != null && matrix.array[local_y][point.x] != null) break;
 
                             const upper_square = matrix.array[local_y-1][point.x];
 
@@ -143,7 +139,16 @@ class Matrix extends GameObject
                         }
                     }
                 }
-            //}
+
+                for(let global_y = point.y+1; global_y >= 0; global_y--)
+                {
+                    //create new squares
+                    if(matrix.array[global_y][point.x] == null)
+                    {
+                        matrix.array[global_y][point.x] = matrix.generateRandomSquare(point.x, global_y, matrix.square_width, matrix.square_colors);
+                    }
+                }
+            }
             //else console.log(point);
 
         });
