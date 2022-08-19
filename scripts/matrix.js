@@ -105,7 +105,7 @@ class Matrix extends GameObject
                     matrix.can_swap = true;
                     clearTimeout(timeout);
     
-                }, matrix.swap_back_time);
+                }, matrix.swap_back_time*2);
 
             }
         }
@@ -133,23 +133,32 @@ class Matrix extends GameObject
 
                             if(upper_square != null && upper_square != undefined)
                             {
-                                matrix.array[local_y][point.x] = matrix.generateRandomSquare(point.x, local_y, upper_square.width, [upper_square.color]);
+                                const new_square = matrix.generateRandomSquare(point.x, local_y-1, upper_square.width, [upper_square.color]);
+                                matrix.array[local_y][point.x] = new_square;
                                 matrix.array[local_y-1][point.x] = null;
+
+                                //animating
+                                const new_squre_destination = matrix.y + (local_y * upper_square.width);
+                                gsap.to(new_square, {y: new_squre_destination, duration: swap_back_time/1000});
                             }
                         }
                     }
                 }
 
-                for(let global_y = point.y+1; global_y >= 0; global_y--)
-                {
-                    //create new squares
-                    if(matrix.array[global_y][point.x] == null)
+                //wait untill all blocks will fall
+                setTimeout(function(){
+
+                    for(let global_y = point.y; global_y >= 0; global_y--)
                     {
-                        matrix.array[global_y][point.x] = matrix.generateRandomSquare(point.x, global_y, matrix.square_width, matrix.square_colors);
+                        //create new squares
+                        if(matrix.array[global_y][point.x] == null)
+                        {
+                            matrix.array[global_y][point.x] = matrix.generateRandomSquare(point.x, global_y, matrix.square_width, matrix.square_colors);
+                        }
                     }
-                }
+
+                }, swap_back_time);
             }
-            //else console.log(point);
 
         });
     }
@@ -205,8 +214,12 @@ class Matrix extends GameObject
 
     swapSquares(point1, point2)
     {
+        //because of gsap, we can not generate strcutured clone
+        this.array[point1.y][point1.x]._gsap = null;
+        this.array[point2.y][point2.x]._gsap = null;
+
         const square1 = structuredClone(this.array[point1.y][point1.x]);
-        const square2 =  structuredClone(this.array[point2.y][point2.x]);
+        const square2 = structuredClone(this.array[point2.y][point2.x]);
         
         this.array[point1.y][point1.x].color = square2.color;
         this.array[point2.y][point2.x].color = square1.color;
