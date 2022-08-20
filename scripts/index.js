@@ -2,14 +2,19 @@
 let current_square_id = null;
 let current_square_point = null;
 
-function start(engine, matrix)
+function start(engine, matrix, progress_tracker)
 {
     matrix.regenerateArray(square_width, square_colors);
+    progress_tracker.startTimeUpdate();
     engine.start();
 }
 
 //ui-elements
 const scores_text = document.querySelector('#scoresText');
+const time_text = document.querySelector('#timeText');
+const end_time_modal = document.querySelector('#endTimeModal');
+const end_time_scores_text = document.querySelector('#endTimeScoresText');
+const highscores_text = document.querySelector('#highScoresText');
 
 //configuring canvas
 const canvas = document.querySelector('canvas');
@@ -17,14 +22,14 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const engine = new Engine(canvas, 'aqua');
-const progress_tracker = new Progress(scores_text);
+const progress_tracker = new Progress(scores_text, time_text, level_time);
 const matrix = new Matrix(matrix_coordinates.x, matrix_coordinates.y, matrix_size.x, matrix_size.x, minimum_squares_combination, swap_back_time, square_width, square_colors);
 engine.addObject(matrix);
 
 //detect click on square
 window.addEventListener('click', function(event){
     
-    if(matrix.can_swap)
+    if(matrix.can_swap && engine.is_working)
     {
         matrix.checkSquares(function(square, square_point){
 
@@ -89,7 +94,14 @@ window.addEventListener('click', function(event){
 
 });
 
-start(engine, matrix);
+//and of the game
+progress_tracker.setEndTimeAction(function(){
+    engine.is_working = false;
+    end_time_modal.classList.remove('hidden');
+    endTimeScoresText.innerHTML = 'Scores: '+progress_tracker.scores;
+});
+
+start(engine, matrix, progress_tracker);
 
 //game loop
 let animation_frame;

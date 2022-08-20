@@ -21,3 +21,41 @@ body
     position: absolute;
     margin: 15px;
 }
+
+#timeText
+{
+    position: absolute;
+    margin: 15px;
+    right: 0;
+}
+
+.ui-container
+{
+    position: absolute;
+    background-color: antiquewhite;
+    padding: 10px;
+    border-radius: 10px;
+    width: 30%;
+    height: 30vh;
+    display: grid;
+    text-align: center;
+    top: 35vh;
+    left: 35%;
+    justify-content: center;
+    align-items: center;
+}
+
+.ui-container button
+{
+    width: 200px;
+    height: 50px;
+    border: 0;
+    background-color: lightcoral;
+    font-size: 1.2em;
+}
+
+.ui-container button:hover
+{
+    box-shadow: 1px 1px 4px lightgray;
+    cursor: pointer;
+}

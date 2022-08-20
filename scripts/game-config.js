@@ -9,3 +9,5 @@ const matrix_coordinates = {
 const square_colors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple'];
 const minimum_squares_combination = 3;
 const swap_back_time = 300;
+
+const level_time = 5;
