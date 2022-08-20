@@ -68,7 +68,9 @@ class Matrix extends GameObject
                 matrix.can_swap = true;
                 clearTimeout(timeout);
 
-            }, matrix.swap_back_time)
+            }, matrix.swap_back_time);
+
+            return {points: [], scores: 0};
         }
         else
         {
@@ -89,26 +91,26 @@ class Matrix extends GameObject
 
             });
 
-            if(unique_points != [])
-            {
+            return {points: unique_points, scores: squares_count};
 
-                unique_points = unique_points.sort(function(point1, point2){
-                    return point2.y - point1.y;
-                });
-                console.log(unique_points)
-
-                this.fillDestroyedSquares(unique_points);
-                this.can_swap = false;
-    
-                const timeout = setTimeout(function(){
-    
-                    matrix.can_swap = true;
-                    clearTimeout(timeout);
-    
-                }, matrix.swap_back_time*2);
-
-            }
         }
+    }
+
+    processCombinationPoints(unique_points)
+    {
+        unique_points = unique_points.sort(function(point1, point2){
+            return point2.y - point1.y;
+        });
+
+        this.fillDestroyedSquares(unique_points);
+        this.can_swap = false;
+
+        const timeout = setTimeout(function(){
+
+            matrix.can_swap = true;
+            clearTimeout(timeout);
+
+        }, matrix.swap_back_time*2);
     }
 
     fillDestroyedSquares(points)

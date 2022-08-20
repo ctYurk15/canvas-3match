@@ -1,5 +1,4 @@
 //in-game state
-//let matrix = [];
 let current_square_id = null;
 let current_square_point = null;
 
@@ -9,13 +8,16 @@ function start(engine, matrix)
     engine.start();
 }
 
+//ui-elements
+const scores_text = document.querySelector('#scoresText');
+
 //configuring canvas
 const canvas = document.querySelector('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const engine = new Engine(canvas, 'aqua');
-const progress_tracker = new Progress();
+const progress_tracker = new Progress(scores_text);
 const matrix = new Matrix(matrix_coordinates.x, matrix_coordinates.y, matrix_size.x, matrix_size.x, minimum_squares_combination, swap_back_time, square_width, square_colors);
 engine.addObject(matrix);
 
@@ -47,7 +49,14 @@ window.addEventListener('click', function(event){
                                 if(current_square_position.distanceFrom(previous_square_position) <= square_width)
                                 {
                                     matrix.swapSquares(square_point, current_square_point);
-                                    matrix.checkCombinations(square_point, current_square_point);
+                                    let combinations_result = matrix.checkCombinations(square_point, current_square_point);
+
+                                    if(combinations_result.points != [])
+                                    {
+                                        matrix.processCombinationPoints(combinations_result.points);
+                                        progress_tracker.addScores(combinations_result.scores);
+                                    }
+
                                     swaped = true;
                                 }
                             }
