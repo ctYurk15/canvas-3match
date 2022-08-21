@@ -27,6 +27,10 @@ class Progress
 
     updateUI()
     {
+        //show ui
+        this.scores_text_container.classList.remove('hidden');
+        this.time_text_container.classList.remove('hidden');
+        
         this.scores_text_container.innerHTML = 'Scores: '+this.scores;
         this.time_text_container.innerHTML = 'Time left: '+this.current_seconds+'s';
     }
