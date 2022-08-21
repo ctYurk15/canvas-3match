@@ -4,7 +4,7 @@ let current_square_point = null;
 
 function start(engine, matrix, progress_tracker)
 {
-    matrix.regenerateArray(square_width, square_colors);
+    matrix.regenerateArray(square_width, square_config);
     progress_tracker.restoreProgress();
 
     progress_tracker.startTimeUpdate();
@@ -29,9 +29,9 @@ const canvas = document.querySelector('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const engine = new Engine(canvas, 'aqua');
+const engine = new Engine(canvas, background_l1_sprite);
 const progress_tracker = new Progress(scores_text, time_text, level_time);
-const matrix = new Matrix(matrix_coordinates.x, matrix_coordinates.y, matrix_size.x, matrix_size.x, minimum_squares_combination, swap_back_time, square_width, square_colors);
+const matrix = new Matrix(matrix_coordinates.x, matrix_coordinates.y, matrix_size.x, matrix_size.x, minimum_squares_combination, swap_back_time, square_width, square_config);
 engine.addObject(matrix);
 
 //detect click on square

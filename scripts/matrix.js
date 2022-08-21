@@ -3,7 +3,7 @@ class Matrix extends GameObject
     array = [];
     can_swap = true;
 
-    constructor(x, y, matrix_width, matrix_height, minimum_squares_combination, swap_back_time, square_width, square_colors)
+    constructor(x, y, matrix_width, matrix_height, minimum_squares_combination, swap_back_time, square_width, square_config)
     {
         super(x, y);
 
@@ -12,19 +12,20 @@ class Matrix extends GameObject
         this.height = matrix_height;
         this.minimum_squares_combination = minimum_squares_combination;
         this.swap_back_time = swap_back_time;
-        this.square_colors = square_colors;
+        this.square_config = square_config;
     }
 
-    generateRandomSquare(x, y, square_width, square_colors)
+    generateRandomSquare(x, y, square_width, square_config)
     {
         const square_x = this.x + (x * square_width);
         const square_y = this.y + (y * square_width);
-        const square_color = square_colors[getRandomInt(0, square_colors.length)];
+        const new_square_config = square_config[getRandomInt(0, square_config.length)];
+        console.log(square_config);
 
-        return new Square(square_x, square_y, square_width, square_color);
+        return new Square(square_x, square_y, square_width, new_square_config.color, new_square_config.sprite);
     }
 
-    regenerateArray(square_width, square_colors)
+    regenerateArray(square_width, square_config)
     {
         //clear old state
         this.array = getEmpty2dArray(this.width, this.height);
@@ -34,7 +35,7 @@ class Matrix extends GameObject
         {
             for(let x = 0; x < this.width; x++)
             {
-                const square = this.generateRandomSquare(x, y, square_width, square_colors);
+                const square = this.generateRandomSquare(x, y, square_width, square_config);
                 this.array[y][x] = square;
             }
         }
@@ -135,7 +136,10 @@ class Matrix extends GameObject
 
                             if(upper_square != null && upper_square != undefined)
                             {
-                                const new_square = matrix.generateRandomSquare(point.x, local_y-1, upper_square.width, [upper_square.color]);
+                                const new_square = matrix.generateRandomSquare(point.x, local_y-1, upper_square.width, [
+                                    {color: upper_square.color, sprite: upper_square.sprite}
+                                ]);
+                                
                                 matrix.array[local_y][point.x] = new_square;
                                 matrix.array[local_y-1][point.x] = null;
 
@@ -155,7 +159,7 @@ class Matrix extends GameObject
                         //create new squares
                         if(matrix.array[global_y][point.x] == null)
                         {
-                            const new_square = matrix.generateRandomSquare(point.x, global_y-1, matrix.square_width, matrix.square_colors);
+                            const new_square = matrix.generateRandomSquare(point.x, global_y-1, matrix.square_width, matrix.square_config);
                             matrix.array[global_y][point.x] = new_square;
 
                             //animating
@@ -222,14 +226,20 @@ class Matrix extends GameObject
     swapSquares(point1, point2)
     {
         //because of gsap, we can not generate structured clone
-        this.array[point1.y][point1.x]._gsap = null;
-        this.array[point2.y][point2.x]._gsap = null;
+        /*this.array[point1.y][point1.x]._gsap = null;
+        this.array[point2.y][point2.x]._gsap = null;*/
 
-        const square1 = structuredClone(this.array[point1.y][point1.x]);
-        const square2 = structuredClone(this.array[point2.y][point2.x]);
+        const square1 = this.array[point1.y][point1.x];
+        const square2 = this.array[point2.y][point2.x];
+
+        const square1_color = square1.color; const square2_color = square2.color;
+        const square1_sprite = square1.sprite; const square2_sprite = square2.sprite;
         
-        this.array[point1.y][point1.x].color = square2.color;
-        this.array[point2.y][point2.x].color = square1.color;
+        this.array[point1.y][point1.x].color = square2_color;
+        this.array[point1.y][point1.x].sprite = square2_sprite;
+
+        this.array[point2.y][point2.x].color = square1_color;
+        this.array[point2.y][point2.x].sprite = square1_sprite;
     }
 
     render(canvas_context)

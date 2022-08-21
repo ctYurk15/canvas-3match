@@ -11,7 +11,7 @@ function getEmpty2dArray(width, height)
 
     for(let y = 0; y < height; y++)
     {
-        result[y] = new Array(height);
+        result[y] = new Array(width);
     }
 
     return result;
