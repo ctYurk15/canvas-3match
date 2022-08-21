@@ -25,6 +25,30 @@ class Progress
         this.updateUI();
     }
 
+    checkLevelHighscoreStorage()
+    {
+        if(localStorage.getItem('levels_highscore') == null)
+        {
+            localStorage.setItem('levels_highscore', '[0, 0, 0]');
+        }
+    }
+
+    setLevelHighscore(scores, level = 0)
+    {
+        this.checkLevelHighscoreStorage();
+
+        const records = JSON.parse(localStorage.getItem('levels_highscore'));
+        if(records[level] < scores)
+        {
+            records[level] = scores;
+            localStorage.setItem('levels_highscore', JSON.stringify(records));
+
+            return scores;
+        }
+
+        return records[level];
+    }
+
     updateUI()
     {
         //show ui

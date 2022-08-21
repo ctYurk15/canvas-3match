@@ -11,9 +11,6 @@ class Square extends Rectangle
 
     render(canvas_context)
     {
-        /*canvas_context.beginPath();
-        this.draw(canvas_context);
-        canvas_context.fill();*/
         this.sprite.draw(canvas_context, this.x, this.y, this.width, this.width);
 
         if(this.selected)

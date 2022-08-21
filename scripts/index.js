@@ -1,6 +1,7 @@
 //in-game state
 let current_square_id = null;
 let current_square_point = null;
+let current_level = 0;
 
 function start(engine, matrix, progress_tracker)
 {
@@ -107,6 +108,7 @@ progress_tracker.setEndTimeAction(function(){
     engine.is_working = false;
     end_time_modal.classList.remove('hidden');
     endTimeScoresText.innerHTML = 'Scores: '+progress_tracker.scores;
+    highscores_text.innerHTML = 'Highscores: '+progress_tracker.setLevelHighscore(progress_tracker.scores, current_level);
 });
 
 start_game_button.addEventListener('click', function(){
