@@ -4,12 +4,13 @@ class Progress
     total_seconds = 0;
     end_time_action = null;
 
-    constructor(scores_text_container, time_text_container, total_seconds)
+    constructor(scores_text_container, time_text_container, total_seconds, engine)
     {
         this.scores_text_container = scores_text_container;
         this.time_text_container = time_text_container;
         this.current_seconds = total_seconds;
         this.total_seconds = total_seconds;
+        this.engine = engine;
     }
 
     restoreProgress()
@@ -72,8 +73,11 @@ class Progress
             }
             else
             {
-                self.current_seconds--;
-                self.time_text_container.innerHTML = 'Time left: '+self.current_seconds+'s';
+                if(self.engine.is_working && !self.engine.paused)
+                {
+                    self.current_seconds--;
+                    self.time_text_container.innerHTML = 'Time left: '+self.current_seconds+'s';
+                }
             }
 
 

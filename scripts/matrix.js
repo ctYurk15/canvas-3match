@@ -20,7 +20,6 @@ class Matrix extends GameObject
         const square_x = this.x + (x * square_width);
         const square_y = this.y + (y * square_width);
         const new_square_config = square_config[getRandomInt(0, square_config.length)];
-        console.log(square_config);
 
         return new Square(square_x, square_y, square_width, new_square_config.color, new_square_config.sprite);
     }

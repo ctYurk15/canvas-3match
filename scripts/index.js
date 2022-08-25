@@ -20,10 +20,13 @@ const end_time_scores_text = document.querySelector('#endTimeScoresText');
 const highscores_text = document.querySelector('#highScoresText');
 
 const end_time_modal = document.querySelector('#endTimeModal');
-const menu_modal = document.querySelector("#menuModal");
+const menu_modal = document.querySelector('#menuModal');
+const pause_modal = document.querySelector('#pauseModal');
 
 const start_game_button = document.querySelector('#startGameButton');
 const restart_game_button = document.querySelector('#restartGameButton');
+const continue_game_button = document.querySelector('#continueGameButton');
+const pause_menu_button = document.querySelector('#menuButton');
 
 //configuring canvas
 const canvas = document.querySelector('canvas');
@@ -31,7 +34,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const engine = new Engine(canvas, background_l1_sprite);
-const progress_tracker = new Progress(scores_text, time_text, level_time);
+const progress_tracker = new Progress(scores_text, time_text, level_time, engine);
 const matrix = new Matrix(matrix_coordinates.x, matrix_coordinates.y, matrix_size.x, matrix_size.x, minimum_squares_combination, swap_back_time, square_width, square_config);
 engine.addObject(matrix);
 
@@ -119,6 +122,38 @@ start_game_button.addEventListener('click', function(){
 restart_game_button.addEventListener('click', function(){
     start(engine, matrix, progress_tracker);
     end_time_modal.classList.add('hidden');
+});
+
+//pause
+window.addEventListener('keydown', function(event){
+    if(event.key == 'Escape' && engine.is_working)
+    {
+        engine.paused = !engine.paused;
+        pause_modal.classList.toggle('hidden', !engine.paused);
+    }
+});
+
+continue_game_button.addEventListener('click', function(){
+    if(engine.is_working)
+    {
+        engine.paused = false;
+        pause_modal.classList.add('hidden');
+    }
+});
+
+pause_menu_button.addEventListener('click', function(){
+    
+    engine.paused = false;
+    engine.is_working = false;
+
+    pause_modal.classList.add('hidden');
+    menu_modal.classList.remove('hidden');
+
+    scores_text.classList.add('hidden');
+    time_text.classList.add('hidden');  
+
+    engine.clear();
+
 });
 
 engine.clear();
