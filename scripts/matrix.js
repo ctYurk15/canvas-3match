@@ -144,7 +144,7 @@ class Matrix extends GameObject
 
                                 //animating
                                 const new_squre_destination = matrix.y + (local_y * upper_square.width);
-                                gsap.to(new_square, {y: new_squre_destination, duration: swap_back_time/1000});
+                                gsap.to(new_square, {y: new_squre_destination, duration: matrix.swap_back_time/1000});
                             }
                         }
                     }
@@ -163,11 +163,11 @@ class Matrix extends GameObject
 
                             //animating
                             const new_squre_destination = matrix.y + (global_y * matrix.square_width);
-                            gsap.to(new_square, {y: new_squre_destination, duration: swap_back_time/1000});
+                            gsap.to(new_square, {y: new_squre_destination, duration: matrix.swap_back_time/1000});
                         }
                     }
 
-                }, swap_back_time);
+                }, matrix.swap_back_time);
             }
 
         });
@@ -224,10 +224,6 @@ class Matrix extends GameObject
 
     swapSquares(point1, point2)
     {
-        //because of gsap, we can not generate structured clone
-        /*this.array[point1.y][point1.x]._gsap = null;
-        this.array[point2.y][point2.x]._gsap = null;*/
-
         const square1 = this.array[point1.y][point1.x];
         const square2 = this.array[point2.y][point2.x];
 
@@ -243,6 +239,7 @@ class Matrix extends GameObject
 
     render(canvas_context)
     {
+        console.log(9);
         for(let y = 0; y < this.height; y++)
         {
             for(let x = 0; x < this.width; x++)

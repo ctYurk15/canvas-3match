@@ -3,6 +3,7 @@ class Progress
     scores = 0;
     total_seconds = 0;
     end_time_action = null;
+    interval = null;
 
     constructor(scores_text_container, time_text_container, total_seconds, engine)
     {
@@ -16,6 +17,7 @@ class Progress
     restoreProgress()
     {
         this.current_seconds = this.total_seconds;
+        clearInterval(this.interval);
         this.scores = 0;
         this.updateUI();
     }
@@ -64,11 +66,11 @@ class Progress
     {
         const self = this;
 
-        let interval = setInterval(function(){
+        this.interval = setInterval(function(){
 
             if(self.current_seconds <= 0)
             {
-                clearInterval(interval);
+                clearInterval(self.interval);
                 self.end_time_action();
             }
             else

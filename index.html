@@ -14,6 +14,18 @@
     <img src="textures/4.png" id="square4_l1_texture" class="hidden">
     <img src="textures/5.png" id="square5_l1_texture" class="hidden">
 
+    <img src="textures/6.png" id="square1_l2_texture" class="hidden">
+    <img src="textures/7.png" id="square2_l2_texture" class="hidden">
+    <img src="textures/8.png" id="square3_l2_texture" class="hidden">
+    <img src="textures/9.png" id="square4_l2_texture" class="hidden">
+
+    <img src="textures/10.png" id="square1_l3_texture" class="hidden">
+    <img src="textures/11.png" id="square2_l3_texture" class="hidden">
+    <img src="textures/12.png" id="square3_l3_texture" class="hidden">
+    <img src="textures/13.png" id="square4_l3_texture" class="hidden">
+    <img src="textures/14.png" id="square5_l3_texture" class="hidden">
+    <img src="textures/15.png" id="square6_l3_texture" class="hidden">
+
     <img src="textures/background/background_l1.jpg" id="background_l1_texture" class="hidden">
 
     <h1 id="scoresText" class="hidden">Scores: 0</h1>
@@ -23,15 +35,18 @@
         <h4 id="endTimeScoresText">Scores: 0</h4>
         <h4 id="highScoresText">Highscores: 0</h4>
         <button id="restartGameButton">Restart</button>
+        <button class="menuButton">Menu</button>
     </div>
     <div class="ui-container" id="menuModal">
       <h2>Pick-up the level</h2>
-      <button id="startGameButton">Level 1</button>
+      <button class="start-game-button" data-level="0">Level 1</button>
+      <button class="start-game-button" data-level="1">Level 2</button>
+      <button class="start-game-button" data-level="2">Level 3</button>
     </div>
     <div class="ui-container hidden" id="pauseModal">
       <h2>Pause</h2>
       <button id="continueGameButton">Continue</button>
-      <button id="menuButton">Menu</button>
+      <button class="menuButton">Menu</button>
     </div>
     <canvas></canvas>
   </body>
